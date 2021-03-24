@@ -42,7 +42,9 @@ class BertTest():
 
     def CloveLM(self):
         from transformers import BertForMaskedLM
-
+        text = "[CLS] 等到潮水 [MASK] 了，就知道誰沒穿褲子。"
+        tokens = self.tokenizer.tokenize(text)
+        ids = self.tokenizer.convert_tokens_to_ids(tokens)
         # 除了 tokens 以外我們還需要辨別句子的 segment ids
         tokens_tensor = torch.tensor([ids])  # (1, seq_len)
         segments_tensors = torch.zeros_like(tokens_tensor)  # (1, seq_len)
@@ -70,3 +72,13 @@ class BertTest():
             tokens[masked_index] = t
             print(t)
             print("Top {} ({:2}%)：{}".format(i, int(p.item() * 100), tokens[:10]), '...')
+    def testall(self):
+        self.vocabsize()
+        print(("=")*45)
+        self.randomtokens()
+        print(("=") * 45)
+        self.token2ids()
+        print(("=") * 45)
+        self.ind()
+        print(("=") * 45)
+        self.CloveLM()

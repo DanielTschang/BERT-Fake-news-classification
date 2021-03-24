@@ -142,7 +142,7 @@ def get_predictions(model, dataloader, compute_acc=False):
     return predictions
 
 
-def buildmodel()
+def buildmodel():
     # 載入一個可以做中文多分類任務的模型，n_class = 3
     from transformers import BertForSequenceClassification
     NUM_LABELS = 3
@@ -223,24 +223,27 @@ def save(model):
     torch.save(model.state_dict(), "output/Bert_FakenewsClassification")
 
 if __name__ == "__main__":
-    # testBert = BertTest(PRETRAINED_MODEL_NAME)
-    # testBert.token2ids()
-    data = dataProcess(traindir="data/train.csv", testdir="data/test.csv")
-    data.preprocess()
-    tokenizer = BertTokenizer.from_pretrained(PRETRAINED_MODEL_NAME)
-    # 初始化一個專門讀取訓練樣本的 Dataset，使用中文 BERT 斷詞
-    trainset = FakeNewsDataset("train", tokenizer=tokenizer)
-    tensorlized(trainset)
-    # 初始化一個每次回傳 64 個訓練樣本的 DataLoader
-    # 利用 `collate_fn` 將 list of samples 合併成一個 mini-batch 是關鍵
+    test = True
+    if test:
+        testBert = BertTest(PRETRAINED_MODEL_NAME)
+        testBert.testall()
+    else:
+        data = dataProcess(traindir="data/train.csv", testdir="data/test.csv")
+        data.preprocess()
+        tokenizer = BertTokenizer.from_pretrained(PRETRAINED_MODEL_NAME)
+        # 初始化一個專門讀取訓練樣本的 Dataset，使用中文 BERT 斷詞
+        trainset = FakeNewsDataset("train", tokenizer=tokenizer)
+        tensorlized(trainset)
+        # 初始化一個每次回傳 64 個訓練樣本的 DataLoader
+        # 利用 `collate_fn` 將 list of samples 合併成一個 mini-batch 是關鍵
 
-    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE,
-                             collate_fn=create_mini_batch)
-    model = buildmodel()
-    # 讓模型跑在 GPU 上並取得訓練集的分類準確率
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print("device:", device)
-    model = model.to(device)
-    model = train(model)
-    eval(model)
-    save(model)
+        trainloader = DataLoader(trainset, batch_size=BATCH_SIZE,
+                                 collate_fn=create_mini_batch)
+        model = buildmodel()
+        # 讓模型跑在 GPU 上並取得訓練集的分類準確率
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        print("device:", device)
+        model = model.to(device)
+        model = train(model)
+        eval(model)
+        save(model)
