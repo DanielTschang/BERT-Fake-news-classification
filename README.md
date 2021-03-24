@@ -1,4 +1,4 @@
 # Fake news classification
  WSDM Kaggle
-##5 epochs 
-##Score : 0.86074
+## 5 epochs 
+## Score : 0.86074
